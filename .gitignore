@@ -1,0 +1,8 @@
+.python-version
+.DS_Store
+sample_bots/
+.env
+.vscode
+cogs/__pycache__
+utils/__pycache__
+test_code/
