@@ -31,8 +31,13 @@ class events(commands.Cog):
         # On member joins we find a channel called general and if it exists,
         # send an embed welcoming them to our guild
         channel = discord.utils.get(member.guild.text_channels, name='welcome🔥')
+        des = (
+            f"Welcome {member.mention} to Indian Students Association's "
+            f"official discord server!\n"
+            f"Don't forget to check {(discord.utils.get(member.guild.channels, name='rules📃')).mention}"
+            f"and {(discord.utils.get(member.guild.channels, name='faq')).mention}"
+        )
         if channel:
-            des = f"Welcome {member.mention} to Indian Students Association's official discord server!\n Don't forget to check {(discord.utils.get(member.guild.channels, name='rules📃')).mention} and {(discord.utils.get(member.guild.channels, name='faq')).mention}"
             embed = discord.Embed(description=des, color=random.choice(self.bot.color_list))
             embed.set_thumbnail(url=member.avatar_url)
             embed.set_author(name=member.name, icon_url=member.avatar_url)
