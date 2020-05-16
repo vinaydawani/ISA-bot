@@ -1,12 +1,22 @@
 import os
 import requests
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 import discord
 import asyncio
+from datetime import datetime
 from discord.ext import commands
+from utils.codes import states, alt_names, alpha2, alpha3, JHU_names
 
 class covid(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    confirmed_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
+    deaths_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
+    recovered_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv'
+
 
     def getCovidInfo(self, country):
         response = requests.get("https://api.covid19api.com/summary")
