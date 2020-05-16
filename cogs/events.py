@@ -28,8 +28,6 @@ class events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        # On member joins we find a channel called general and if it exists,
-        # send an embed welcoming them to our guild
         channel = discord.utils.get(member.guild.text_channels, name='welcome🔥')
         des = (
             f"Welcome {member.mention} to Indian Students Association's "
