@@ -84,7 +84,7 @@ class covid(commands.Cog):
             name = f'Coronavirus Cases | {location}'
             img = 'https://lh3.googleusercontent.com/proxy/MqV-IVThACM7kYgDDF8Zle_McVLAWctkCUpleMWRJzLypYjrKpgdu1Z_8H8nONFLdr7DVO3WPp-3iaPHwXvdjAo_De8Lwu1k66l3y5r-_xVSso9yw_UEesB8OG5txpA'
 
-            description = ''
+            description = f'Novel Coronavirus statistics in {location} as requested by {ctx.author.mention}'
 
             if int(new_conf) > 0:
                 new_conf = f'(+{int(new_conf)})'
@@ -100,11 +100,17 @@ class covid(commands.Cog):
                 mort = round((int(death)/int(conf) * 100), 2)
                 rec = round((int(recovered)/int(conf) * 100), 2)
 
-            embed = discord.Embed(description=description, color=0xa8000d, timestamp=datetime.utcnow())
+            embed = discord.Embed(description=description, color=discord.Colour.dark_red(), timestamp=datetime.utcnow())
+
             embed.set_author(name=name, icon_url=img, url='https://www.worldometers.info/coronavirus/')
             embed.add_field(name="Confirmed", value=f"**{int(conf)}** {new_conf}")
             embed.add_field(name="Deaths", value=f"**{int(death)}** {new_death}")
-            embed.set_footer(text='Data from Worldometer and Johns Hopkins CSSE')
+            embed.add_field(name="Recovered", value=f"**{int(recovered)}**")
+            embed.add_field(name="Active", value=f"**{int(active)}**")
+            embed.add_field(name="Critical", value=f"**{int(serious)}**")
+            embed.add_field(name="Recovery Rate", value=f"**{rec}**")
+            embed.add_field(name="Mortality Rate", value=f"**{mort}**")
+            embed.set_footer(text="Data from Worldometer")
 
             msg = await ctx.send(embed=embed)
 
