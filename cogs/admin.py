@@ -48,10 +48,6 @@ class admin(commands.Cog):
         # remove `foo`
         return content.strip('` \n')
 
-    @commands.command()
-    async def ping(self, ctx):
-        await ctx.send(f"Pong! {round(self.bot.latency * 1000)}ms")
-
     @commands.command(name='load')
     @commands.is_owner()
     async def loadcog(self, ctx, cog: str = None):
