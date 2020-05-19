@@ -3,14 +3,39 @@ import requests
 import asyncio
 import datetime
 import copy
+import random
 from typing import Optional
 import discord
 from discord.ext import commands
+
+class GlobalChannel(commands.Converter):
+    async def convert(self, ctx, argument):
+        try:
+            return await commands.TextChannelConverter().convert(ctx, argument)
+        except commands.BadArgument:
+            # Not found... so fall back to ID + global lookup
+            try:
+                channel_id = int(argument, base=10)
+            except ValueError:
+                raise commands.BadArgument(f'Could not find a channel by ID {argument!r}.')
+            else:
+                channel = ctx.bot.get_channel(channel_id)
+                if channel is None:
+                    raise commands.BadArgument(f'Could not find a channel by ID {argument!r}.')
+                return
 
 class admin(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    async def send_embedded(self, ctx, content):
+        embed = discord.Embed(color=random.choice(self.bot.color_list), description=content)
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def ping(self, ctx):
+        await ctx.send(f"Pong! {round(self.bot.latency * 1000)}ms")
 
     @commands.command(name='load')
     @commands.is_owner()
@@ -51,28 +76,25 @@ class admin(commands.Cog):
             except Exception as e:
                 await msg.edit(content=f"**Error** {e.__class__.__name__} - {e}")
 
-    @commands.command(alias='say', hidden=True)
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def spam(selp, ctx, amount, *, content: str):
         await ctx.message.delete()
         for spam in range(int(amount)):
             await ctx.send(content)
 
-    class GlobalChannel(commands.Converter):
-    	async def convert(self, ctx, argument):
-    		try:
-    			return await commands.TextChannelConverter().convert(ctx, argument)
-    		except commands.BadArgument:
-    			# Not found... so fall back to ID + global lookup
-    			try:
-    				channel_id = int(argument, base=10)
-    			except ValueError:
-    				raise commands.BadArgument(f'Could not find a channel by ID {argument!r}.')
-    			else:
-    				channel = ctx.bot.get_channel(channel_id)
-    				if channel is None:
-    					raise commands.BadArgument(f'Could not find a channel by ID {argument!r}.')
-    				return
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def botsay(self, ctx, channel: Optional[GlobalChannel], embed: bool, *, stuff: str):
+        msg = copy.copy(ctx.message)
+        channel = channel or ctx.channel
+        msg.channel = channel
+        msg.content =  stuff
+        new = await self.bot.get_context(msg, cls=type(ctx))
+        if embed:
+            await self.send_embedded(new, stuff)
+        else:
+            await new.send(stuff)
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -84,43 +106,6 @@ class admin(commands.Cog):
         msg.content = ctx.prefix + command
         new = await self.bot.get_context(msg, cls=type(ctx))
         await self.bot.invoke(new)
-
-
-'''
-    async def say_permissions(self, ctx, member, channel):
-		permissions = channel.permissions_for(member)
-		e = discord.Embed(colour=member.colour)
-		avatar = member.avatar_url_as(static_format='png')
-		e.set_author(name=str(member), url=avatar)
-		allowed, denied = [], []
-		for name, value in permissions:
-			name = name.replace('_', ' ').replace('guild', 'server').title()
-			if value:
-				allowed.append(name)
-			else:
-				denied.append(name)
-
-		e.add_field(name='Allowed', value='\n'.join(allowed))
-		e.add_field(name='Denied', value='\n'.join(denied))
-		await ctx.send(embed=e)
-
-	@commands.command()
-	@commands.guild_only()
-	@commands.is_owner()
-	async def permissions(self, ctx, member: discord.Member = None, channel: discord.TextChannel = None):
-		"""Shows a member's permissions in a specific channel.
-
-		If no channel is given then it uses the current one.
-
-		You cannot use this in private messages. If no member is given then
-		the info returned will be yours.
-		"""
-		channel = channel or ctx.channel
-		if member is None:
-			member = ctx.author
-
-		await self.say_permissions(ctx, member, channel)
-'''
 
 def setup(bot):
     bot.add_cog(admin(bot))
