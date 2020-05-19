@@ -37,7 +37,7 @@ class admin(commands.Cog):
     async def ping(self, ctx):
         await ctx.send(f"Pong! {round(self.bot.latency * 1000)}ms")
 
-    @commands.command(name='load')
+    @commands.command(name='load', hidden=True)
     @commands.is_owner()
     async def loadcog(self, ctx, cog: str = None):
         if cog is None:
@@ -50,7 +50,7 @@ class admin(commands.Cog):
             except Exception as e:
                 await msg.edit(content=f"**Error** {e.__class__.__name__} - {e}")
 
-    @commands.command(name='unload')
+    @commands.command(name='unload', hidden=True)
     @commands.is_owner()
     async def unloadcog(self, ctx, cog: str = None):
         if cog is None:
@@ -63,7 +63,7 @@ class admin(commands.Cog):
             except Exception as e:
                 await msg.edit(content=f"**Error** {e.__class__.__name__} - {e}")
 
-    @commands.command(name='reload')
+    @commands.command(name='reload', hidden=True)
     @commands.is_owner()
     async def reloadcog(self, ctx, cog: str = None):
         if cog is None:
@@ -75,6 +75,11 @@ class admin(commands.Cog):
                 await msg.edit(content="Cog reloaded successfully! :white_check_mark:")
             except Exception as e:
                 await msg.edit(content=f"**Error** {e.__class__.__name__} - {e}")
+
+    @commands.command(hidden=True)
+    async def extensions(self, ctx):
+        """Lists the currently loaded extensions."""
+        await self.send_embedded(ctx, '\n'.join(sorted([i for i in self.bot.extensions.keys()])))
 
     @commands.command(hidden=True)
     @commands.is_owner()
