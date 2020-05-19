@@ -90,7 +90,7 @@ class admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def botsay(self, ctx, channel: Optional[GlobalChannel], embed: bool, *, stuff: str):
+    async def botsay(self, ctx, channel: Optional[GlobalChannel], embed: bool = False, *, stuff: str):
         msg = copy.copy(ctx.message)
         channel = channel or ctx.channel
         msg.channel = channel
