@@ -4,9 +4,14 @@ import asyncio
 import datetime
 import copy
 import random
+import io
+import textwrap
+import traceback
 from typing import Optional
+from contextlib import redirect_stdout
 import discord
 from discord.ext import commands
+from utils.global_utils import send_or_hastebin, cleanup_code
 
 class GlobalChannel(commands.Converter):
     async def convert(self, ctx, argument):
@@ -28,10 +33,20 @@ class admin(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self._last_result = None
 
     async def send_embedded(self, ctx, content):
         embed = discord.Embed(color=random.choice(self.bot.color_list), description=content)
         await ctx.send(embed=embed)
+
+    def cleanup_code(self, content):
+        """Automatically removes code blocks from the code."""
+        # remove ```py\n```
+        if content.startswith('```') and content.endswith('```'):
+            return '\n'.join(content.split('\n')[1:-1])
+
+        # remove `foo`
+        return content.strip('` \n')
 
     @commands.command()
     async def ping(self, ctx):
@@ -75,6 +90,57 @@ class admin(commands.Cog):
                 await msg.edit(content="Cog reloaded successfully! :white_check_mark:")
             except Exception as e:
                 await msg.edit(content=f"**Error** {e.__class__.__name__} - {e}")
+
+    @commands.command(name='eval', hidden=True)
+    @commands.is_owner()
+    @commands.bot_has_permissions(send_messages=True)
+    async def _eval(self, ctx, *, code: str):
+        """
+        Evaluates python code in a single line or code block
+
+        Blatantly stolen from:
+        https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/admin.py
+        """
+        env = {
+            'bot': self.bot,
+            'ctx': ctx,
+            'channel': ctx.channel,
+            'author': ctx.author,
+            'guild': ctx.guild,
+            'message': ctx.message,
+            '_': self._last_result
+        }
+
+        env.update(globals())
+        code = cleanup_code(code)
+        stdout = io.StringIO()
+        to_compile = f'async def func():\n{textwrap.indent(code, "  ")}'
+
+        try:
+            exec(to_compile, env)
+        except Exception as e:
+            return await ctx.send(f'```py\n{e.__class__.__name__}: {e}\n```')
+
+        func = env['func']
+        try:
+            with redirect_stdout(stdout):
+                ret = await func()
+        except Exception as e:
+            value = stdout.getvalue()
+            await ctx.send(f'```py\n{value}{traceback.format_exc()}\n```')
+        else:
+            value = stdout.getvalue()
+            try:
+                await ctx.message.add_reaction('\u2705')
+            except:
+                pass
+
+            if ret is None:
+                if value:
+                    await send_or_hastebin(ctx, content=value, code='py')
+            else:
+                self._last_result = ret
+                await send_or_hastebin(ctx, f'{value}{ret}', code='py')
 
     @commands.command(hidden=True)
     @commands.is_owner()
