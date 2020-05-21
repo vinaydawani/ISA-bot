@@ -4,11 +4,12 @@ import asyncio
 import datetime
 import copy
 import random
+from collections import Counter
 from typing import Optional, Union
 import discord
 from discord.ext import commands
 from utils import colors, checks, converters, errors
-
+from utils.global_functions import confirm_prompt
 
 class mod(commands.Cog):
     def __init__(self, bot):
@@ -106,14 +107,13 @@ class mod(commands.Cog):
     async def _error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
             await self.send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
-
-# TODO: mute, unmute, purge, presence
+        elif isinstance(error, commands.MissingPermissions):
+            return await self.send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 
     @commands.command()
     @commands.guild_only()
     @checks.has_permissions(ban_members = True)
     async def lockdown(self, ctx, action):
-        """Prevents anyone from chatting in the current channel."""
         if action.lower() == 'on':
             msg = await ctx.send("Locking down the channel...")
             await ctx.channel.set_permissions(discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=False)
@@ -124,6 +124,79 @@ class mod(commands.Cog):
             return await msg.edit(content="The channel has been successfully unlocked. :unlock: ")
         else:
             return await self.send_embedded(ctx, "Lockdown command:\n!!lockdown [on/off]")
+
+# Purge commands --------------------------------------------------------------------------------------------
+    async def to_purge(self, ctx, limit, check, *, before=None, after=None):
+        if limit > 150:
+            return await self.send_embedded(ctx, "limit of messages that can be deleted is 150!")
+
+        try:
+            purged = await ctx.channel.purge(limit=limit, before=ctx.message, check=check)
+        except discord.Forbidden:
+            return await ctx.send("I do not have permissions to carry out this command")
+        except discord.HTTPException as e:
+            return await ctx.send(f"**Error:** {e}")
+
+        authors = Counter(str(msg.author) for msg in purged)
+        purged = len(purged)
+        desc = [f"Deleted {purged} message(s)"]
+
+        if purged:
+            desc.append('')
+            spammers = sorted(authors.items(), key=lambda t: t[1], reverse=True)
+            desc.extend(f'**{name}**: {count}' for name, count in spammers)
+
+        embed = discord.Embed(color=random.choice(self.bot.color_list), description='\n'.join(desc))
+        await ctx.send(embed=embed, delete_after=15)
+
+    @commands.group(case_insensitive=True, invoke_without_command=False)
+    @checks.is_mod()
+    @checks.is_admin()
+    @checks.has_permissions(manage_messages = True)
+    async def purge(self, ctx):
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(ctx.command)
+
+    @purge.error
+    async def purge_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            return await self.send_embedded(ctx, "An argument is missing!")
+        elif isinstance(error, commands.MissingPermissions):
+            return await self.send_embedded(ctx, "You don't have the permission to pull it off broh!!")
+
+    @purge.command(name='user')
+    async def _user(self, ctx, member: discord.Member, search: int = 10):
+        await self.to_purge(ctx, search, lambda m: m.author == member)
+        await ctx.message.add_reaction('\U00002705')
+
+    @purge.command(name='all')
+    async def _all(self, ctx, search: int = 20):
+        if not await confirm_prompt(ctx, f"Delete {search} messages?"):
+            return
+        await self.to_purge(ctx, search, lambda m: True)
+        await ctx.message.add_reaction('\U00002705')
+
+    @purge.command(name='clean')
+    @commands.is_owner()
+    async def _clean(self, ctx, search: int = 500):
+        if not await confirm_prompt(ctx, f"Delete **all** messages?"):
+            return
+        await self.to_purge(ctx, search, lambda m: True)
+        await ctx.message.add_reaction('\U00002705')
+
+    @purge.command(name='content')
+    async def _equals(self, ctx, *, substr):
+        await self.to_purge(ctx, 50, lambda m: m.content == substr)
+        await ctx.message.add_reaction('\U00002705')
+
+    @purge.command(name='contains')
+    async def _contains(self, ctx, *, substr):
+        await self.to_purge(ctx, 50, lambda m: substr in m.content)
+        await ctx.message.add_reaction('\U00002705')
+
+### Purge commans end ------------------------------------------------------------------------------------
+
+# TODO: mute, unmute, presence
 
 def setup(bot):
     bot.add_cog(mod(bot))
