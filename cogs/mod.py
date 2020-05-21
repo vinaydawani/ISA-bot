@@ -215,7 +215,6 @@ class mod(commands.Cog):
 
 ### Presence tools -------------------------------------
 
-# IDEA: functions to call to change presence rather than cycling through a list
     @commands.group(name='presence', invoke_without_command=True, case_insensitive=True)
     @checks.is_admin()
     async def change_presence(self, ctx):
@@ -231,6 +230,7 @@ class mod(commands.Cog):
         await self.bot.change_presence(activity=discord.Activity(name=name, type=discord.ActivityType.listening),
                                        status=status)
         await ctx.message.add_reaction('\u2705')
+        await ctx.message.delete(delay=15.0)
 
     @change_presence.command(aliases=['p'])
     async def playing(self, ctx, *, name):
@@ -241,6 +241,7 @@ class mod(commands.Cog):
         status = botmember.status
         await self.bot.change_presence(activity=discord.Game(name=name), status=status)
         await ctx.message.add_reaction('\u2705')
+        await ctx.message.delete(delay=15.0)
 
     @change_presence.command(aliases=['s'])
     async def streaming(self, ctx, name, url=None):
@@ -254,6 +255,7 @@ class mod(commands.Cog):
             url = f'https://www.twitch.tv/{name}'
         await self.bot.change_presence(activity=discord.Streaming(name=name, url=url), status=status)
         await ctx.message.add_reaction('\u2705')
+        await ctx.message.delete(delay=15.0)
 
     @change_presence.command(aliases=['w'])
     async def watching(self, ctx, *, name):
@@ -265,6 +267,7 @@ class mod(commands.Cog):
         await self.bot.change_presence(activity=discord.Activity(name=name, type=discord.ActivityType.watching),
                                        status=status)
         await ctx.message.add_reaction('\u2705')
+        await ctx.message.delete(delay=15.0)
 
     @change_presence.command()
     async def status(self, ctx, status):
@@ -284,16 +287,19 @@ class mod(commands.Cog):
         activity = botmember.activity
         await self.bot.change_presence(status=stata[status], activity=activity)
         await ctx.message.add_reaction('\u2705')
+        await ctx.message.delete(delay=15.0)
 
     @change_presence.command()
     async def clear(self, ctx):
         await self.bot.change_presence()
         await ctx.message.add_reaction('\u2705')
+        await ctx.message.delete(delay=15.0)
 
     @change_presence.command()
     async def reset(self, ctx):
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='you for feedback :)'))
         await ctx.message.add_reaction('\u2705')
+        await ctx.message.delete(delay=15.0)
 
 def setup(bot):
     bot.add_cog(mod(bot))
