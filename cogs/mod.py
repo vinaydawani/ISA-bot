@@ -125,6 +125,13 @@ class mod(commands.Cog):
         else:
             return await self.send_embedded(ctx, "Lockdown command:\n!!lockdown [on/off]")
 
+    @lockdown.error
+    async def lockdown_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await self.send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
+        elif isinstance(error, commands.MissingPermissions):
+            return await self.send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
+
 # Purge commands --------------------------------------------------------------------------------------------
     async def to_purge(self, ctx, limit, check, *, before=None, after=None):
         if limit > 150:
@@ -178,7 +185,7 @@ class mod(commands.Cog):
 
     @purge.command(name='clean')
     @commands.is_owner()
-    async def _clean(self, ctx, search: int = 500):
+    async def _clean(self, ctx, search: int = 149):
         if not await confirm_prompt(ctx, f"Delete **all** messages?"):
             return
         await self.to_purge(ctx, search, lambda m: True)
@@ -196,7 +203,26 @@ class mod(commands.Cog):
 
 ### Purge commans end ------------------------------------------------------------------------------------
 
-# TODO: mute, unmute, presence
+    @commands.command()
+    @checks.has_permissions(administrator = True)
+    async def dm(self, ctx, member: discord.Member, *, msg: str):
+        try:
+            await member.send(msg)
+            await ctx.message.delete()
+            await self.send_embedded(ctx, f"DM to {member} has been sent!")
+        except commands.MissingPermissions:
+            await self.send_embedded(ctx, f"You dont have the permissions mah dude!")
+
+### Presence tools -------------------------------------
+
+# IDEA: functions to call to change presence rather than cycling through a list
+    @commands.group(name='presence', invoke_without_command=True, case_insensitive=True)
+    async def change_presence(self, ctx):
+        await ctx.send_help(ctx.command)
+
+    @change_presence.command
+    async def listen(self, ctx, *, name):
+        pass
 
 def setup(bot):
     bot.add_cog(mod(bot))
