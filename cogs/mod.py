@@ -217,12 +217,83 @@ class mod(commands.Cog):
 
 # IDEA: functions to call to change presence rather than cycling through a list
     @commands.group(name='presence', invoke_without_command=True, case_insensitive=True)
+    @checks.is_admin()
     async def change_presence(self, ctx):
         await ctx.send_help(ctx.command)
 
-    @change_presence.command
+    @change_presence.command(aliases=['l'])
     async def listen(self, ctx, *, name):
-        pass
+        if ctx.guild is None:
+            botmember = self.bot.guilds[0].me
+        else:
+            botmember = ctx.me
+        status = botmember.status
+        await self.bot.change_presence(activity=discord.Activity(name=name, type=discord.ActivityType.listening),
+                                       status=status)
+        await ctx.message.add_reaction('\u2705')
+
+    @change_presence.command(aliases=['p'])
+    async def playing(self, ctx, *, name):
+        if ctx.guild is None:
+            botmember = self.bot.guilds[0].me
+        else:
+            botmember = ctx.me
+        status = botmember.status
+        await self.bot.change_presence(activity=discord.Game(name=name), status=status)
+        await ctx.message.add_reaction('\u2705')
+
+    @change_presence.command(aliases=['s'])
+    async def streaming(self, ctx, name, url=None):
+        if ctx.guild is None:
+            botmember = self.bot.guilds[0].me
+        else:
+            botmember = ctx.me
+        status = botmember.status
+        # url = url or 'https://www.twitch.tv/directory'
+        if name and (url == None):
+            url = f'https://www.twitch.tv/{name}'
+        await self.bot.change_presence(activity=discord.Streaming(name=name, url=url), status=status)
+        await ctx.message.add_reaction('\u2705')
+
+    @change_presence.command(aliases=['w'])
+    async def watching(self, ctx, *, name):
+        if ctx.guild is None:
+            botmember = self.bot.guilds[0].me
+        else:
+            botmember = ctx.me
+        status = botmember.status
+        await self.bot.change_presence(activity=discord.Activity(name=name, type=discord.ActivityType.watching),
+                                       status=status)
+        await ctx.message.add_reaction('\u2705')
+
+    @change_presence.command()
+    async def status(self, ctx, status):
+        stata = {'online': discord.Status.online,
+                    'offline': discord.Status.invisible,
+                    'invis': discord.Status.invisible,
+                    'invisible': discord.Status.invisible,
+                    'idle': discord.Status.idle,
+                    'dnd': discord.Status.dnd}
+        status = status.lower()
+        if status not in stata:
+            return await ctx.send(f'Not a valid status! Choose: [{", ".join(stata.keys())}]')
+        if ctx.guild is None:
+            botmember = self.bot.guilds[0].me
+        else:
+            botmember = ctx.me
+        activity = botmember.activity
+        await self.bot.change_presence(status=stata[status], activity=activity)
+        await ctx.message.add_reaction('\u2705')
+
+    @change_presence.command()
+    async def clear(self, ctx):
+        await self.bot.change_presence()
+        await ctx.message.add_reaction('\u2705')
+
+    @change_presence.command()
+    async def reset(self, ctx):
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name='you for feedback :)'))
+        await ctx.message.add_reaction('\u2705')
 
 def setup(bot):
     bot.add_cog(mod(bot))
