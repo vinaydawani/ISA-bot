@@ -86,14 +86,44 @@ class mod(commands.Cog):
         except discord.HTTPException:
             await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
+    @commands.command()
+    @checks.has_permissions(ban_members=True)
+    @checks.has_permissions(kick_members=True)
+    async def softban(self, ctx, member: converters.MemberID, *, reason=None):
+        if member is None:
+            await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
+        try:
+            await ctx.guild.ban(member, reason=self.whats_the_reason(ctx, reason))
+            await ctx.guild.unban(member, reason=self.whats_the_reason(ctx, reason))
+            await ctx.send(embed=self.make_embed(ctx, member, action='soft', custom=reason))
+        except discord.HTTPException:
+            await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
+
     @ban.error
     @unban.error
     @kick.error
+    @softban.error
     async def _error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
             await self.send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
 
 # TODO: mute, unmute, purge, presence
+
+    @commands.command()
+    @commands.guild_only()
+    @checks.has_permissions(ban_members = True)
+    async def lockdown(self, ctx, action):
+        """Prevents anyone from chatting in the current channel."""
+        if action.lower() == 'on':
+            msg = await ctx.send("Locking down the channel...")
+            await ctx.channel.set_permissions(discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=False)
+            return await msg.edit(content="The channel has been successfully locked down. :lock: ")
+        elif action.lower() == 'off':
+            msg = await ctx.send("Unlocking the channel...")
+            await ctx.channel.set_permissions(discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=True)
+            return await msg.edit(content="The channel has been successfully unlocked. :unlock: ")
+        else:
+            return await self.send_embedded(ctx, "Lockdown command:\n!!lockdown [on/off]")
 
 def setup(bot):
     bot.add_cog(mod(bot))
