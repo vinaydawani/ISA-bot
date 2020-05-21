@@ -7,7 +7,7 @@ import random
 from typing import Optional
 import discord
 from discord.ext import commands
-from utils import colors, checks
+from utils import colors, checks, converters
 
 
 class mod(commands.Cog):
@@ -48,7 +48,8 @@ class mod(commands.Cog):
         else:
             embed.description = f'Reason: {custom}'
         embed.set_author(name=f"{member} {desc[action]}")
-        embed.set_thumbnail(url=member.avatar_url)
+        if not desc[action] == 'has been unbanned':
+            embed.set_thumbnail(url=member.avatar_url)
         embed.set_footer(text=f"Action performed by {ctx.author}")
         return embed
 
@@ -65,11 +66,11 @@ class mod(commands.Cog):
 
     @commands.command()
     @checks.has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member = None, del: int = 0, *, reason=None):
+    async def ban(self, ctx, member: discord.Member = None, deleted: int = 0, *, reason=None):
         if member is None:
             await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
-            await ctx.guild.ban(member, reason=self.whats_the_reason(ctx, reason), delete_message_days=min(del, 7))
+            await ctx.guild.ban(member, reason=self.whats_the_reason(ctx, reason), delete_message_days=min(deleted, 7))
             await ctx.send(embed=self.make_embed(ctx, member, action='ban', custom=reason))
         except discord.HTTPException:
             await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
@@ -77,12 +78,12 @@ class mod(commands.Cog):
     # TODO: fix unban command
     @commands.command()
     @checks.has_permissions(ban_members=True)
-    async def unban(self, ctx, member: discord.Member = None, *, reason=None):
+    async def unban(self, ctx, member: converters.BannedMember, *, reason=None):
         if member is None:
             await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
-            await ctx.guild.unban(member, reason=self.whats_the_reason(ctx, reason))
-            await ctx.send(embed=self.make_embed(ctx, member, action='ban', custom=reason))
+            await ctx.guild.unban(member.user, reason=self.whats_the_reason(ctx, reason))
+            await ctx.send(embed=self.make_embed(ctx, member, action='unban', custom=reason))
         except discord.HTTPException:
             await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
