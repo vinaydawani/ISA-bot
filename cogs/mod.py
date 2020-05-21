@@ -9,7 +9,7 @@ from typing import Optional, Union
 import discord
 from discord.ext import commands
 from utils import colors, checks, converters, errors
-from utils.global_functions import confirm_prompt
+from utils.global_utils import confirm_prompt
 
 class mod(commands.Cog):
     def __init__(self, bot):
