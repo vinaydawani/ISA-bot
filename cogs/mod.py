@@ -4,10 +4,10 @@ import asyncio
 import datetime
 import copy
 import random
-from typing import Optional
+from typing import Optional, Union
 import discord
 from discord.ext import commands
-from utils import colors, checks, converters
+from utils import colors, checks, converters, errors
 
 
 class mod(commands.Cog):
@@ -66,7 +66,7 @@ class mod(commands.Cog):
 
     @commands.command()
     @checks.has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member = None, deleted: int = 0, *, reason=None):
+    async def ban(self, ctx, member: discord.Member = None, deleted: Optional[int] = 0, *, reason=None):
         if member is None:
             await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
@@ -75,7 +75,6 @@ class mod(commands.Cog):
         except discord.HTTPException:
             await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
-    # TODO: fix unban command
     @commands.command()
     @checks.has_permissions(ban_members=True)
     async def unban(self, ctx, member: converters.BannedMember, *, reason=None):
@@ -86,6 +85,13 @@ class mod(commands.Cog):
             await ctx.send(embed=self.make_embed(ctx, member, action='unban', custom=reason))
         except discord.HTTPException:
             await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
+
+    @ban.error
+    @unban.error
+    @kick.error
+    async def _error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await self.send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
 
 # TODO: mute, unmute, purge, presence
 
