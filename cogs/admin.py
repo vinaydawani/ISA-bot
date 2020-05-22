@@ -11,7 +11,7 @@ from typing import Optional
 from contextlib import redirect_stdout
 import discord
 from discord.ext import commands
-from utils.global_utils import send_or_hastebin, cleanup_code
+from utils.global_utils import send_or_hastebin, cleanup_code, send_embedded
 
 class GlobalChannel(commands.Converter):
     async def convert(self, ctx, argument):
@@ -34,19 +34,7 @@ class admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
-
-    async def send_embedded(self, ctx, content):
-        embed = discord.Embed(color=random.choice(self.bot.color_list), description=content)
-        await ctx.send(embed=embed)
-
-    def cleanup_code(self, content):
-        """Automatically removes code blocks from the code."""
-        # remove ```py\n```
-        if content.startswith('```') and content.endswith('```'):
-            return '\n'.join(content.split('\n')[1:-1])
-
-        # remove `foo`
-        return content.strip('` \n')
+        
 
     @commands.command(name='load', hidden=True)
     @commands.is_owner()
@@ -138,10 +126,10 @@ class admin(commands.Cog):
                 self._last_result = ret
                 await send_or_hastebin(ctx, f'{value}{ret}', code='py')
 
-    @commands.command(hidden=True)
+    @commands.command(hidden=True, aliases=['ext'])
     async def extensions(self, ctx):
         """Lists the currently loaded extensions."""
-        await self.send_embedded(ctx, '\n'.join(sorted([i for i in self.bot.extensions.keys()])))
+        await send_embedded(ctx, '\n'.join(sorted([i for i in self.bot.extensions.keys()])))
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -159,7 +147,7 @@ class admin(commands.Cog):
         msg.content =  stuff
         new = await self.bot.get_context(msg, cls=type(ctx))
         if embed:
-            await self.send_embedded(new, stuff)
+            await send_embedded(new, stuff)
         else:
             await new.send(stuff)
 

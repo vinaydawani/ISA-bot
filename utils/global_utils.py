@@ -8,6 +8,7 @@ import pytz
 import traceback
 from asyncio import TimeoutError
 from aiohttp import ClientConnectionError, InvalidURL
+from utils.colors import colors
 
 
 async def copy_context(ctx: commands.Context, *, author=None, channel=None, **kwargs):
@@ -128,6 +129,13 @@ async def send_or_hastebin(ctx, content, code=None, url='https://mystb.in'):
     else:
         hastebin_url = await upload_hastebin(ctx, content, url)
         await ctx.send(f'Output too long to send to discord, uploaded here instead: {hastebin_url}')
+
+
+color_list = [c for c in colors.values()]
+
+async def send_embedded(ctx, content):
+    embed = discord.Embed(color=random.choice(color_list), description=content)
+    await ctx.send(embed=embed)
 
 
 async def get_user_timezone(ctx, user):

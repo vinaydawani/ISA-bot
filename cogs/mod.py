@@ -9,7 +9,7 @@ from typing import Optional, Union
 import discord
 from discord.ext import commands
 from utils import colors, checks, converters, errors
-from utils.global_utils import confirm_prompt
+from utils.global_utils import confirm_prompt, send_embedded
 
 class mod(commands.Cog):
     def __init__(self, bot):
@@ -25,10 +25,6 @@ class mod(commands.Cog):
         if len(res) > 500:
             raise commands.BadArgument("Reason too long bro!")
         return res
-
-    async def send_embedded(self, ctx, content):
-        embed = discord.Embed(color=random.choice(self.bot.color_list), description=content)
-        await ctx.send(embed=embed)
 
     def make_embed(self, ctx, member, action, custom=None):
         desc = {
@@ -63,7 +59,7 @@ class mod(commands.Cog):
             await ctx.guild.kick(member, reason=self.whats_the_reason(ctx, reason))
             await ctx.send(embed=self.make_embed(ctx, member, action='kick', custom=reason))
         except discord.HTTPException:
-            await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
+            await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
     @commands.command()
     @checks.has_permissions(ban_members=True)
@@ -74,7 +70,7 @@ class mod(commands.Cog):
             await ctx.guild.ban(member, reason=self.whats_the_reason(ctx, reason), delete_message_days=min(deleted, 7))
             await ctx.send(embed=self.make_embed(ctx, member, action='ban', custom=reason))
         except discord.HTTPException:
-            await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
+            await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
     @commands.command()
     @checks.has_permissions(ban_members=True)
@@ -85,7 +81,7 @@ class mod(commands.Cog):
             await ctx.guild.unban(member.user, reason=self.whats_the_reason(ctx, reason))
             await ctx.send(embed=self.make_embed(ctx, member, action='unban', custom=reason))
         except discord.HTTPException:
-            await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
+            await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
     @commands.command()
     @checks.has_permissions(ban_members=True)
@@ -98,7 +94,7 @@ class mod(commands.Cog):
             await ctx.guild.unban(member, reason=self.whats_the_reason(ctx, reason))
             await ctx.send(embed=self.make_embed(ctx, member, action='soft', custom=reason))
         except discord.HTTPException:
-            await self.send_embedded(ctx, "Uh Ho! Something not quite right happened.")
+            await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
     @ban.error
     @unban.error
@@ -106,9 +102,9 @@ class mod(commands.Cog):
     @softban.error
     async def _error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await self.send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
+            await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
         elif isinstance(error, commands.MissingPermissions):
-            return await self.send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
+            return await send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 
     @commands.command()
     @commands.guild_only()
@@ -123,19 +119,19 @@ class mod(commands.Cog):
             await ctx.channel.set_permissions(discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=True)
             return await msg.edit(content="The channel has been successfully unlocked. :unlock: ")
         else:
-            return await self.send_embedded(ctx, "Lockdown command:\n!!lockdown [on/off]")
+            return await send_embedded(ctx, "Lockdown command:\n!!lockdown [on/off]")
 
     @lockdown.error
     async def lockdown_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await self.send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
+            await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
         elif isinstance(error, commands.MissingPermissions):
-            return await self.send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
+            return await send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 
 # Purge commands --------------------------------------------------------------------------------------------
     async def to_purge(self, ctx, limit, check, *, before=None, after=None):
         if limit > 150:
-            return await self.send_embedded(ctx, "limit of messages that can be deleted is 150!")
+            return await send_embedded(ctx, "limit of messages that can be deleted is 150!")
 
         try:
             purged = await ctx.channel.purge(limit=limit, before=ctx.message, check=check)
@@ -167,9 +163,9 @@ class mod(commands.Cog):
     @purge.error
     async def purge_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            return await self.send_embedded(ctx, "An argument is missing!")
+            return await send_embedded(ctx, "An argument is missing!")
         elif isinstance(error, commands.MissingPermissions):
-            return await self.send_embedded(ctx, "You don't have the permission to pull it off broh!!")
+            return await send_embedded(ctx, "You don't have the permission to pull it off broh!!")
 
     @purge.command(name='user')
     async def _user(self, ctx, member: discord.Member, search: int = 10):
@@ -209,9 +205,9 @@ class mod(commands.Cog):
         try:
             await member.send(msg)
             await ctx.message.delete()
-            await self.send_embedded(ctx, f"DM to {member} has been sent!")
+            await send_embedded(ctx, f"DM to {member} has been sent!")
         except commands.MissingPermissions:
-            await self.send_embedded(ctx, f"You dont have the permissions mah dude!")
+            await send_embedded(ctx, f"You dont have the permissions mah dude!")
 
 ### Presence tools -------------------------------------
 
