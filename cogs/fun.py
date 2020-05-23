@@ -112,18 +112,20 @@ class fun(commands.Cog):
         await ctx.send(embed=embed)
         await ctx.message.delete(delay=60.0)
 
-    @cat.command(name='gif')
+    @dog.command(name='gif')
     async def _gif(self, ctx):
         header = {"x-api-key": self.bot.config['keys']['dog_api']}
         r = requests.get(url='https://api.thedogapi.com/images/search?mime_types=gif', headers=header)
         await self.get_dog(ctx, r)
 
-    @cat.command(name='pic')
+    @dog.command(name='pic')
     async def _pic(self, ctx):
         header = {"x-api-key": self.bot.config['keys']['dog_api']}
         r = requests.get(url='https://api.thedogapi.com/images/search?mime_types=jpg,png', headers=header)
         await self.get_dog(ctx, r)
 
+    # https://nekos.life/api/v2/img/slap
+    # api for various stuff including nsfw content
 
 def setup(bot):
     bot.add_cog(fun(bot))
