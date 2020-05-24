@@ -23,7 +23,7 @@ class utility(commands.Cog):
         if content == None:
             return await send_embedded(ctx, "**ERROR :x:**: Please enter a feedback like !!feedback [content]")
         else:
-            channel = discord.utils.get(ctx.guild.text_channels, name='board-general')
+            channel = discord.utils.get(ctx.guild.text_channels, name='bot-feedback')
             try:
                 embed = discord.Embed(title='Feedback',
                                         color=random.choice(self.bot.color_list),

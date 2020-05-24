@@ -82,16 +82,18 @@ class fun(commands.Cog):
         await ctx.message.delete(delay=60.0)
 
     @cat.command(name='gif')
-    async def _gif(self, ctx):
+    async def gif(self, ctx):
         header = {"x-api-key": self.bot.config['keys']['cat_api']}
         r = requests.get(url='https://api.thecatapi.com/v1/images/search?mime_types=gif', headers=header)
         await self.get_cat(ctx, r)
 
     @cat.command(name='pic')
-    async def _pic(self, ctx):
+    async def pic(self, ctx):
         header = {"x-api-key": self.bot.config['keys']['cat_api']}
         r = requests.get(url='https://api.thecatapi.com/v1/images/search?mime_types=jpg,png', headers=header)
+        print(r)
         await self.get_cat(ctx, r)
+
 
     @commands.group(case_insensitive=True, invoke_without_command=True)
     @commands.cooldown(3, 10, commands.BucketType.user)
@@ -108,21 +110,23 @@ class fun(commands.Cog):
         embed = discord.Embed(title="OMG a doggo :dog:",
                                 color=random.choice(self.bot.color_list))
         embed.set_image(url=j[0]['url'])
-        embed.set_footer(text=f"Image requested by {ctx.author}\nFetched from TheCatApi")
+        embed.set_footer(text=f"Image requested by {ctx.author}\nFetched from TheDogApi")
         await ctx.send(embed=embed)
         await ctx.message.delete(delay=60.0)
 
     @dog.command(name='gif')
     async def _gif(self, ctx):
         header = {"x-api-key": self.bot.config['keys']['dog_api']}
-        r = requests.get(url='https://api.thedogapi.com/images/search?mime_types=gif', headers=header)
+        r = requests.get(url='https://api.thedogapi.com/v1/images/search?mime_types=gif', headers=header)
         await self.get_dog(ctx, r)
 
     @dog.command(name='pic')
     async def _pic(self, ctx):
         header = {"x-api-key": self.bot.config['keys']['dog_api']}
-        r = requests.get(url='https://api.thedogapi.com/images/search?mime_types=jpg,png', headers=header)
+        r = requests.get(url='https://api.thedogapi.com/v1/images/search?mime_types=jpg,png', headers=header)
         await self.get_dog(ctx, r)
+
+    # TODO: gfycat api
 
     # https://nekos.life/api/v2/img/slap
     # api for various stuff including nsfw content
