@@ -2,6 +2,7 @@ import os
 import discord
 import asyncio
 import requests
+import yaml
 from discord.ext import commands
 from dotenv import load_dotenv
 from utils.colors import colors
@@ -16,6 +17,9 @@ bot = commands.Bot(
     command_prefix=commands.when_mentioned_or('isa!', 'i!', '!!'),
     description='I\'m here to just help keep things running smoothly'
 )
+
+with open('config.yaml') as x:
+    bot.config = yaml.safe_load(x)
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py') and not filename.startswith('_'):
