@@ -249,7 +249,7 @@ class mod(commands.Cog):
         # url = url or 'https://www.twitch.tv/directory'
         if name and (url == None):
             url = f'https://www.twitch.tv/{name}'
-        await self.bot.change_presence(activity=discord.Streaming(name=name, url=url), status=status)
+        await self.bot.change_presence(activity=discord.Streaming(name=name, url=url, twitch_name=name), status=status)
         await ctx.message.add_reaction('\u2705')
         await ctx.message.delete(delay=15.0)
 
