@@ -2,6 +2,7 @@
 .DS_Store
 sample_bots/
 .env
+config.yaml
 .vscode
 cogs/__pycache__
 utils/__pycache__
