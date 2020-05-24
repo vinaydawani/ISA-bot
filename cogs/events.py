@@ -13,6 +13,7 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"Beep boop {self.bot.user.name} has connected to Discord!\n")
+        await self.bot.change_presence(status=discord.Status.online, activity=discord.Activity(type=discord.ActivityType.watching, name='for commands starting wit !!, isa! or i!'))
 
     # @commands.Cog.listener()
     # async def on_member_join(self, member):
