@@ -1,0 +1,8 @@
+bot:
+  discord_token: 'Njk5MTgyNDYwOTU2NzA0ODAw.XpT9hg.h6yEtFg5zMDvg7tUuxNLu-Hfp3o'
+  owner: 584894676885176320
+  client_id: 699182460956704800
+
+keys:
+  cat_api: 'ae0e4ed3-0940-40c1-bc07-431463579aaf'
+  dog_api: 'fbf02892-e2d3-4687-b59d-71368f911269'
