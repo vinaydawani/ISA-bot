@@ -133,7 +133,7 @@ class admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def spam(selp, ctx, amount, *, content: str):
+    async def spam(self, ctx, amount, *, content: str):
         await ctx.message.delete()
         for spam in range(int(amount)):
             await ctx.send(content)
