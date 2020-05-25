@@ -27,12 +27,13 @@ for filename in os.listdir('./cogs'):
 
 bot.color_list = [c for c in colors.values()]
 
+# TODO: make a separate file for isa related queries
 @bot.command(name='events')
 async def events(ctx):
     response = 'We don\'t have any upcoming events right now.\nCheck back later! \U0001F6A8'
     await ctx.send(response)
 
-
+# TODO: make a help cog with help and info functions
 @bot.command()
 async def info(ctx):
     embed = discord.Embed(title="ISA Bot", description="A member of ISA family :heart:", color=0xa8000d)
