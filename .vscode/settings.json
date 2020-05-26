@@ -8,6 +8,7 @@
     "python.linting.mypyEnabled": false,
 
     "python.formatting.provider": "black",
+    "python.formatting.blackArgs": ["--line-length", "120"],
 
     "bracket-pair-colorizer-2.colors": [
         "white",
@@ -15,5 +16,6 @@
         "LightSkyBlue"
     ],
 
-    "editor.formatOnType": true
+    "editor.formatOnType": true,
+    "discord.enabled": true
 }
