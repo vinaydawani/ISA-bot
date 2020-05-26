@@ -3,7 +3,6 @@
 sample_bots/
 .env
 config.yaml
-.vscode
 cogs/__pycache__
 utils/__pycache__
 test_code/
