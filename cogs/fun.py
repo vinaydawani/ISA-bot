@@ -128,8 +128,10 @@ class fun(commands.Cog):
         await self.get_dog(ctx, r)
 
     # REVIEW: check if command is working or not
+    # NOTE: extend the limit to get more gifs if ever needed
     @commands.command(name="giphy", aliases=["giffy", "jiff"])
-    async def giphy(self, ctx, search=None):
+    @commands.cooldown(3, 10, commands.BucketType.user)
+    async def giphy(self, ctx, *, search=None):
         head = {"api_key": self.bot.config["keys"]["giphy_api"]}
 
         if search is None:
@@ -157,6 +159,28 @@ class fun(commands.Cog):
 
     # https://nekos.life/api/v2/img/slap
     # api for various stuff including nsfw content
+
+    # NOTE: othher gif APIs include gfycat and tenor
+
+    @commands.command(name="memes", aliases=["meme", "meem"])
+    @commands.cooldown(3, 10, commands.BucketType.user)
+    async def memes(self, ctx):
+        r = requests.get(url="https://meme-api.herokuapp.com/gimme")
+
+        if r.status_code == 200:
+            j = r.json()
+        else:
+            return await send_embedded(ctx, f"Error {r.status_code} in fetching the image. Try again later please.")
+
+        sub = j["subreddit"]
+        embed = discord.Embed(
+            title=j["title"], description=f"posted on r/{sub}", color=random.choice(self.bot.color_list)
+        )
+        embed.set_image(url=j["url"])
+        embed.set_footer(text=f"Requested by {ctx.author} 👾")
+        await ctx.send(embed=embed)
+
+    # TODO: Reddit command to fetch memes and gifs from reddit
 
 
 def setup(bot):
