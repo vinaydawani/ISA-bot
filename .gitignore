@@ -7,3 +7,4 @@ ISA_bot/config.yaml
 ISA_bot/cogs/__pycache__
 ISA_bot/utils/__pycache__
 test_code/
+.vscode
