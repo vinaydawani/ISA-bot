@@ -2,6 +2,7 @@
 .DS_Store
 sample_bot/
 .env
+ISA_bot/.env
 config.yaml
 ISA_bot/config.yaml
 ISA_bot/cogs/__pycache__

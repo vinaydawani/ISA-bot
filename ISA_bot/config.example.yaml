@@ -1,0 +1,9 @@
+bot:
+  discord_token: "YOUR TOKEN HERE"
+  owner: ID
+  client_id: ID
+
+keys:
+  cat_api: "YOUR API"
+  dog_api: "YOUR API"
+  giphy_api: "YOUR API"
