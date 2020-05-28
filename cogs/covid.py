@@ -18,13 +18,9 @@ class covid(commands.Cog):
     deaths_url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
     recovered_url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 
-    confirmed_df = pd.read_csv(confirmed_url, error_bad_lines=False).dropna(
-        axis=1, how="all"
-    )
+    confirmed_df = pd.read_csv(confirmed_url, error_bad_lines=False).dropna(axis=1, how="all")
     deaths_df = pd.read_csv(deaths_url, error_bad_lines=False).dropna(axis=1, how="all")
-    recovered_df = pd.read_csv(recovered_url, error_bad_lines=False).dropna(
-        axis=1, how="all"
-    )
+    recovered_df = pd.read_csv(recovered_url, error_bad_lines=False).dropna(axis=1, how="all")
 
     wom = "https://www.worldometers.info/coronavirus/"
     us_wom = "https://www.worldometers.info/coronavirus/country/us/"
@@ -37,20 +33,14 @@ class covid(commands.Cog):
     r_us_wom = requests.get(us_wom, headers=header)
 
     df = pd.read_html(r_wom.text)[0].replace(np.nan, 0).replace(",", "", regex=True)
-    us_df = (
-        pd.read_html(r_us_wom.text)[0].replace(np.nan, 0).replace(",", "", regex=True)
-    )
+    us_df = pd.read_html(r_us_wom.text)[0].replace(np.nan, 0).replace(",", "", regex=True)
 
     def get_loc(self, location, val):
-        loc_df = self.df[self.df["Country,Other"].str.match(location, na=False)][
-            val
-        ].values[0]
+        loc_df = self.df[self.df["Country,Other"].str.match(location, na=False)][val].values[0]
         return loc_df
 
     def get_total(self, val):
-        all_df = self.df[self.df["Country,Other"].str.match("Total:", na=False)][
-            val
-        ].values[0]
+        all_df = self.df[self.df["Country,Other"].str.match("Total:", na=False)][val].values[0]
         return all_df
 
     @commands.command(name="covid", aliases=["coronavirus"])
@@ -111,15 +101,11 @@ class covid(commands.Cog):
                 rec = round((int(recovered) / int(conf) * 100), 2)
 
             embed = discord.Embed(
-                description=description,
-                color=discord.Colour.dark_red(),
-                timestamp=datetime.utcnow(),
+                description=description, color=discord.Colour.dark_red(), timestamp=datetime.utcnow(),
             )
 
             embed.set_author(
-                name=name,
-                icon_url=img,
-                url="https://www.worldometers.info/coronavirus/",
+                name=name, icon_url=img, url="https://www.worldometers.info/coronavirus/",
             )
             embed.add_field(name="Confirmed", value=f"**{int(conf)}** {new_conf}")
             embed.add_field(name="Deaths", value=f"**{int(death)}** {new_death}")
@@ -133,9 +119,7 @@ class covid(commands.Cog):
             await ctx.send(embed=embed)
 
         else:
-            await ctx.send(
-                "There is no available data for this location | Use **!!help** for more info on commands"
-            )
+            await ctx.send("There is no available data for this location | Use **!!help** for more info on commands")
 
 
 def setup(bot):

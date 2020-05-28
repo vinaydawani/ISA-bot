@@ -52,40 +52,25 @@ class mod(commands.Cog):
     @checks.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member = None, *, reason=None):
         if member is None:
-            await ctx.send(
-                "You probably haven't entered something correctly\n```!!kick <member> <reason>```"
-            )
+            await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
             await ctx.guild.kick(member, reason=self.whats_the_reason(ctx, reason))
-            await ctx.send(
-                embed=self.make_embed(ctx, member, action="kick", custom=reason)
-            )
+            await ctx.send(embed=self.make_embed(ctx, member, action="kick", custom=reason))
         except discord.HTTPException:
             await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
     @commands.command()
     @checks.has_permissions(ban_members=True)
     async def ban(
-        self,
-        ctx,
-        member: discord.Member = None,
-        deleted: Optional[int] = 0,
-        *,
-        reason=None,
+        self, ctx, member: discord.Member = None, deleted: Optional[int] = 0, *, reason=None,
     ):
         if member is None:
-            await ctx.send(
-                "You probably haven't entered something correctly\n```!!kick <member> <reason>```"
-            )
+            await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
             await ctx.guild.ban(
-                member,
-                reason=self.whats_the_reason(ctx, reason),
-                delete_message_days=min(deleted, 7),
+                member, reason=self.whats_the_reason(ctx, reason), delete_message_days=min(deleted, 7),
             )
-            await ctx.send(
-                embed=self.make_embed(ctx, member, action="ban", custom=reason)
-            )
+            await ctx.send(embed=self.make_embed(ctx, member, action="ban", custom=reason))
         except discord.HTTPException:
             await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
@@ -93,16 +78,10 @@ class mod(commands.Cog):
     @checks.has_permissions(ban_members=True)
     async def unban(self, ctx, member: converters.BannedMember, *, reason=None):
         if member is None:
-            await ctx.send(
-                "You probably haven't entered something correctly\n```!!kick <member> <reason>```"
-            )
+            await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
-            await ctx.guild.unban(
-                member.user, reason=self.whats_the_reason(ctx, reason)
-            )
-            await ctx.send(
-                embed=self.make_embed(ctx, member, action="unban", custom=reason)
-            )
+            await ctx.guild.unban(member.user, reason=self.whats_the_reason(ctx, reason))
+            await ctx.send(embed=self.make_embed(ctx, member, action="unban", custom=reason))
         except discord.HTTPException:
             await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
@@ -111,15 +90,11 @@ class mod(commands.Cog):
     @checks.has_permissions(kick_members=True)
     async def softban(self, ctx, member: converters.MemberID, *, reason=None):
         if member is None:
-            await ctx.send(
-                "You probably haven't entered something correctly\n```!!kick <member> <reason>```"
-            )
+            await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
             await ctx.guild.ban(member, reason=self.whats_the_reason(ctx, reason))
             await ctx.guild.unban(member, reason=self.whats_the_reason(ctx, reason))
-            await ctx.send(
-                embed=self.make_embed(ctx, member, action="soft", custom=reason)
-            )
+            await ctx.send(embed=self.make_embed(ctx, member, action="soft", custom=reason))
         except discord.HTTPException:
             await send_embedded(ctx, "Uh Ho! Something not quite right happened.")
 
@@ -129,13 +104,9 @@ class mod(commands.Cog):
     @softban.error
     async def _error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await send_embedded(
-                ctx, "Please check the arguments as one of it might be wrong."
-            )
+            await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
         elif isinstance(error, commands.MissingPermissions):
-            return await send_embedded(
-                ctx, "You don't have the permission to pull this one off broh!!"
-            )
+            return await send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 
     @commands.command()
     @commands.guild_only()
@@ -143,45 +114,29 @@ class mod(commands.Cog):
     async def lockdown(self, ctx, action):
         if action.lower() == "on":
             msg = await ctx.send("Locking down the channel...")
-            await ctx.channel.set_permissions(
-                discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=False
-            )
-            return await msg.edit(
-                content="The channel has been successfully locked down. :lock: "
-            )
+            await ctx.channel.set_permissions(discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=False)
+            return await msg.edit(content="The channel has been successfully locked down. :lock: ")
         elif action.lower() == "off":
             msg = await ctx.send("Unlocking the channel...")
-            await ctx.channel.set_permissions(
-                discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=True
-            )
-            return await msg.edit(
-                content="The channel has been successfully unlocked. :unlock: "
-            )
+            await ctx.channel.set_permissions(discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=True)
+            return await msg.edit(content="The channel has been successfully unlocked. :unlock: ")
         else:
             return await send_embedded(ctx, "Lockdown command:\n!!lockdown [on/off]")
 
     @lockdown.error
     async def lockdown_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await send_embedded(
-                ctx, "Please check the arguments as one of it might be wrong."
-            )
+            await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
         elif isinstance(error, commands.MissingPermissions):
-            return await send_embedded(
-                ctx, "You don't have the permission to pull this one off broh!!"
-            )
+            return await send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 
     # Purge commands --------------------------------------------------------------------------------------------
     async def to_purge(self, ctx, limit, check, *, before=None, after=None):
         if limit > 150:
-            return await send_embedded(
-                ctx, "limit of messages that can be deleted is 150!"
-            )
+            return await send_embedded(ctx, "limit of messages that can be deleted is 150!")
 
         try:
-            purged = await ctx.channel.purge(
-                limit=limit, before=ctx.message, check=check
-            )
+            purged = await ctx.channel.purge(limit=limit, before=ctx.message, check=check)
         except discord.Forbidden:
             return await ctx.send("I do not have permissions to carry out this command")
         except discord.HTTPException as e:
@@ -196,9 +151,7 @@ class mod(commands.Cog):
             spammers = sorted(authors.items(), key=lambda t: t[1], reverse=True)
             desc.extend(f"**{name}**: {count}" for name, count in spammers)
 
-        embed = discord.Embed(
-            color=random.choice(self.bot.color_list), description="\n".join(desc)
-        )
+        embed = discord.Embed(color=random.choice(self.bot.color_list), description="\n".join(desc))
         await ctx.send(embed=embed, delete_after=15)
 
     @commands.group(case_insensitive=True, invoke_without_command=False)
@@ -214,9 +167,7 @@ class mod(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             return await send_embedded(ctx, "An argument is missing!")
         elif isinstance(error, commands.MissingPermissions):
-            return await send_embedded(
-                ctx, "You don't have the permission to pull it off broh!!"
-            )
+            return await send_embedded(ctx, "You don't have the permission to pull it off broh!!")
 
     @purge.command(name="user")
     async def _user(self, ctx, member: discord.Member, search: int = 10):
@@ -275,8 +226,7 @@ class mod(commands.Cog):
             botmember = ctx.me
         status = botmember.status
         await self.bot.change_presence(
-            activity=discord.Activity(name=name, type=discord.ActivityType.listening),
-            status=status,
+            activity=discord.Activity(name=name, type=discord.ActivityType.listening), status=status,
         )
         await ctx.message.add_reaction("\u2705")
         await ctx.message.delete(delay=15.0)
@@ -303,8 +253,7 @@ class mod(commands.Cog):
         if name and (url == None):
             url = f"https://www.twitch.tv/{name}"
         await self.bot.change_presence(
-            activity=discord.Streaming(name=name, url=url, twitch_name=name),
-            status=status,
+            activity=discord.Streaming(name=name, url=url, twitch_name=name), status=status,
         )
         await ctx.message.add_reaction("\u2705")
         await ctx.message.delete(delay=15.0)
@@ -317,8 +266,7 @@ class mod(commands.Cog):
             botmember = ctx.me
         status = botmember.status
         await self.bot.change_presence(
-            activity=discord.Activity(name=name, type=discord.ActivityType.watching),
-            status=status,
+            activity=discord.Activity(name=name, type=discord.ActivityType.watching), status=status,
         )
         await ctx.message.add_reaction("\u2705")
         await ctx.message.delete(delay=15.0)
@@ -335,9 +283,7 @@ class mod(commands.Cog):
         }
         status = status.lower()
         if status not in stata:
-            return await ctx.send(
-                f'Not a valid status! Choose: [{", ".join(stata.keys())}]'
-            )
+            return await ctx.send(f'Not a valid status! Choose: [{", ".join(stata.keys())}]')
         if ctx.guild is None:
             botmember = self.bot.guilds[0].me
         else:
@@ -356,9 +302,7 @@ class mod(commands.Cog):
     @change_presence.command()
     async def reset(self, ctx):
         await self.bot.change_presence(
-            activity=discord.Activity(
-                type=discord.ActivityType.listening, name="you for feedback :)"
-            )
+            activity=discord.Activity(type=discord.ActivityType.listening, name="you for feedback :)")
         )
         await ctx.message.add_reaction("\u2705")
         await ctx.message.delete(delay=15.0)

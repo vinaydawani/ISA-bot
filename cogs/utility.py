@@ -21,23 +21,13 @@ class utility(commands.Cog):
     @commands.command()
     async def feedback(self, ctx, *, content: str = None):
         if content == None:
-            return await send_embedded(
-                ctx, "**ERROR :x:**: Please enter a feedback like !!feedback [content]"
-            )
+            return await send_embedded(ctx, "**ERROR :x:**: Please enter a feedback like !!feedback [content]")
         else:
             channel = discord.utils.get(ctx.guild.text_channels, name="bot-feedback")
             try:
-                embed = discord.Embed(
-                    title="Feedback",
-                    color=random.choice(self.bot.color_list),
-                    description=content,
-                )
-                embed.set_author(
-                    name=f"Sent by: {ctx.author.name}", icon_url=ctx.author.avatar_url
-                )
-                embed.set_footer(
-                    text=f"Sent in #{ctx.channel.name}", icon_url=ctx.guild.icon_url
-                )
+                embed = discord.Embed(title="Feedback", color=random.choice(self.bot.color_list), description=content,)
+                embed.set_author(name=f"Sent by: {ctx.author.name}", icon_url=ctx.author.avatar_url)
+                embed.set_footer(text=f"Sent in #{ctx.channel.name}", icon_url=ctx.guild.icon_url)
                 await channel.send(embed=embed)
                 await ctx.message.delete(delay=5.0)
                 await send_embedded(ctx, "Thank you for sending the feedback :smiley:")
@@ -48,8 +38,7 @@ class utility(commands.Cog):
     async def _urban_dictionary(self, ctx, *, word=None):
         if word is None:
             return await send_embedded(
-                ctx,
-                "**ERROR :x:**: You are missing the word! Please enter a command like !!urban [word]",
+                ctx, "**ERROR :x:**: You are missing the word! Please enter a command like !!urban [word]",
             )
         else:
             r = requests.get(f"http://api.urbandictionary.com/v0/define?term={word}")
@@ -66,8 +55,7 @@ class utility(commands.Cog):
     async def timer(self, ctx, secs: int = None):
         if secs is None:
             return await send_embedded(
-                ctx,
-                "**ERROR :x:**: You are missing the time! Please enter a command like !!timer [seconds]",
+                ctx, "**ERROR :x:**: You are missing the time! Please enter a command like !!timer [seconds]",
             )
         else:
             await send_embedded(ctx, "Timer has started baby :timer:")

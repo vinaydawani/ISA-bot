@@ -23,15 +23,11 @@ class GlobalChannel(commands.Converter):
             try:
                 channel_id = int(argument, base=10)
             except ValueError:
-                raise commands.BadArgument(
-                    f"Could not find a channel by ID {argument!r}."
-                )
+                raise commands.BadArgument(f"Could not find a channel by ID {argument!r}.")
             else:
                 channel = ctx.bot.get_channel(channel_id)
                 if channel is None:
-                    raise commands.BadArgument(
-                        f"Could not find a channel by ID {argument!r}."
-                    )
+                    raise commands.BadArgument(f"Could not find a channel by ID {argument!r}.")
                 return
 
 
@@ -133,9 +129,7 @@ class admin(commands.Cog):
     @commands.command(hidden=True, aliases=["ext"])
     async def extensions(self, ctx):
         """Lists the currently loaded extensions."""
-        await send_embedded(
-            ctx, "\n".join(sorted([i for i in self.bot.extensions.keys()]))
-        )
+        await send_embedded(ctx, "\n".join(sorted([i for i in self.bot.extensions.keys()])))
 
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -146,9 +140,7 @@ class admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def botsay(
-        self, ctx, channel: Optional[GlobalChannel], embed: bool = False, *, stuff: str
-    ):
+    async def botsay(self, ctx, channel: Optional[GlobalChannel], embed: bool = False, *, stuff: str):
         msg = copy.copy(ctx.message)
         channel = channel or ctx.channel
         msg.channel = channel
@@ -161,9 +153,7 @@ class admin(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def sudo(
-        self, ctx, channel: Optional[GlobalChannel], who: discord.User, *, command: str
-    ):
+    async def sudo(self, ctx, channel: Optional[GlobalChannel], who: discord.User, *, command: str):
         msg = copy.copy(ctx.message)
         channel = channel or ctx.channel
         msg.channel = channel

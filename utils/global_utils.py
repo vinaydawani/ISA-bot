@@ -54,8 +54,7 @@ async def confirm_prompt(ctx: commands.Context, msg):
         return False  # author typed something else in the same channel, keep waiting
 
     prompt = await ctx.send(
-        f"{msg}\n"
-        f"Please type **confirm** within 1 minute to continue or type **abort** if you change your mind."
+        f"{msg}\n" f"Please type **confirm** within 1 minute to continue or type **abort** if you change your mind."
     )
 
     try:
@@ -109,16 +108,12 @@ async def upload_hastebin(ctx_or_bot, content, url="https://mystb.in"):
     """Uploads content to hastebin"""
     bot = ctx_or_bot if isinstance(ctx_or_bot, commands.Bot) else ctx_or_bot.bot
     try:
-        async with bot.session.post(
-            f"{url}/documents", data=content.encode("utf-8")
-        ) as post:
+        async with bot.session.post(f"{url}/documents", data=content.encode("utf-8")) as post:
             return f'{url}/{(await post.json())["key"]}'
     except:
         try:
             url = "https://hastebin.com"
-            async with bot.session.post(
-                f"{url}/documents", data=content.encode("utf-8")
-            ) as post:
+            async with bot.session.post(f"{url}/documents", data=content.encode("utf-8")) as post:
                 return f'{url}/{(await post.json())["key"]}'
         except:
             traceback.print_exc()
@@ -134,9 +129,7 @@ async def send_or_hastebin(ctx, content, code=None, url="https://mystb.in"):
         await ctx.send(cb)
     else:
         hastebin_url = await upload_hastebin(ctx, content, url)
-        await ctx.send(
-            f"Output too long to send to discord, uploaded here instead: {hastebin_url}"
-        )
+        await ctx.send(f"Output too long to send to discord, uploaded here instead: {hastebin_url}")
 
 
 color_list = [c for c in colors.values()]
