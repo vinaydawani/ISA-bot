@@ -37,15 +37,4 @@ async def events(ctx):
     await ctx.send(response)
 
 
-# TODO: make a help cog with help and info functions
-@bot.command()
-async def info(ctx):
-    embed = discord.Embed(title="ISA Bot", description="A member of ISA family :heart:", color=0xA8000D)
-
-    # give info about you here
-    embed.add_field(name="Creator", value="@External72")
-
-    await ctx.send(embed=embed)
-
-
 bot.run(TOKEN)
