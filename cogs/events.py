@@ -17,8 +17,7 @@ class events(commands.Cog):
         await self.bot.change_presence(
             status=discord.Status.online,
             activity=discord.Activity(
-                type=discord.ActivityType.watching,
-                name="for commands starting with !!, isa! or i!",
+                type=discord.ActivityType.watching, name="for commands starting with !!, isa! or i!",
             ),
         )
 
@@ -44,9 +43,7 @@ class events(commands.Cog):
             f"and {(discord.utils.get(member.guild.channels, name='faq')).mention}"
         )
         if channel:
-            embed = discord.Embed(
-                description=des, color=random.choice(self.bot.color_list)
-            )
+            embed = discord.Embed(description=des, color=random.choice(self.bot.color_list))
             embed.set_thumbnail(url=member.avatar_url)
             embed.set_author(name=member.name, icon_url=member.avatar_url)
             embed.set_footer(text=member.guild, icon_url=member.guild.icon_url)

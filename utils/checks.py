@@ -10,9 +10,7 @@ async def check_permissions(ctx, perms, *, check=all):
         return True
 
     resolved = ctx.channel.permissions_for(ctx.author)
-    return check(
-        getattr(resolved, name, None) == value for name, value in perms.items()
-    )
+    return check(getattr(resolved, name, None) == value for name, value in perms.items())
 
 
 def has_permissions(*, check=all, **perms):
@@ -31,9 +29,7 @@ async def check_guild_permissions(ctx, perms, *, check=all):
         return False
 
     resolved = ctx.author.guild_permissions
-    return check(
-        getattr(resolved, name, None) == value for name, value in perms.items()
-    )
+    return check(getattr(resolved, name, None) == value for name, value in perms.items())
 
 
 def has_guild_permissions(*, check=all, **perms):
