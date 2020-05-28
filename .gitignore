@@ -1,8 +1,9 @@
 .python-version
 .DS_Store
-sample_bots/
+sample_bot/
 .env
 config.yaml
-cogs/__pycache__
-utils/__pycache__
+ISA_bot/config.yaml
+ISA_bot/cogs/__pycache__
+ISA_bot/utils/__pycache__
 test_code/
