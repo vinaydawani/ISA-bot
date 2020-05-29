@@ -1,0 +1,22 @@
+sudo: true
+dist: trusty
+language: python
+cache: pip
+notifications:
+  email: false
+python:
+  - "3.8.1"
+  - "3.7.6"
+
+install:
+  - pip install -r requirements.txt
+
+jobs:
+  include:
+    - stage: stylecheck
+      python: 3.8.1
+      script: black --check --diff -l 120 -N `git ls-files "*.py"`
+
+script:
+  - python -m compileall ./ISA_bot
+  - python ./ISA_bot/bot.py --test-run
