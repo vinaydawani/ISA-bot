@@ -32,7 +32,10 @@ class covid(commands.Cog):
     r_wom = requests.get(wom, headers=header)
     r_us_wom = requests.get(us_wom, headers=header)
 
-    df = pd.read_html(r_wom.text)[0].replace(np.nan, 0).replace(",", "", regex=True)
+    r_wom_clean = r_wom.text
+    r_wom_clean = r_wom_clean.replace(" !important;display:none;", "")
+
+    df = pd.read_html(r_wom_clean)[0].replace(np.nan, 0).replace(",", "", regex=True)
     us_df = pd.read_html(r_us_wom.text)[0].replace(np.nan, 0).replace(",", "", regex=True)
 
     def get_loc(self, location, val):
