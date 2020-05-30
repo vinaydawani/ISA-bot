@@ -11,6 +11,8 @@ from utils.codes import states, alt_names, alpha2, alpha3, JHU_names
 
 
 class covid(commands.Cog):
+    """gets stats for coronavirus"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -49,6 +51,7 @@ class covid(commands.Cog):
     @commands.command(name="covid", aliases=["coronavirus"])
     @commands.cooldown(2, 15, commands.BucketType.user)
     async def covid(self, ctx, location="ALL"):
+        """retuns the stats of novel coronavirus cases given the country"""
 
         # Check and convert thhe name of location if necessary
         if len(location) == 2 or len(location) == 3:

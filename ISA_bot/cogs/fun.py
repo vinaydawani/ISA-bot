@@ -13,12 +13,15 @@ from utils.global_utils import confirm_prompt, send_embedded
 
 
 class fun(commands.Cog):
+    """weird, silly and fun commands that will probably make to smile"""
+
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
 
     @commands.command(name="yesno", aliases=["yn"])
     async def yesorno(self, ctx):
+        """gives a gif with yes or no"""
         r = requests.get("https://yesno.wtf/api")
         j = r.json()
 
@@ -30,6 +33,7 @@ class fun(commands.Cog):
 
     @commands.command(aliases=["tf", "face"])
     async def textface(self, ctx, Type=None):
+        """gives out a funny textface"""
         if Type is None:
             await ctx.send(
                 "That is NOT one of the dank textfaces in here yet. Use: *textface list to get a list of textfaces you can use."
@@ -70,6 +74,7 @@ class fun(commands.Cog):
     @commands.group(case_insensitive=True, invoke_without_command=True)
     @commands.cooldown(3, 10, commands.BucketType.user)
     async def cat(self, ctx):
+        """cats! cats everywhere!"""
         await ctx.send_help(ctx.command)
 
     async def get_cat(self, ctx, r):
@@ -86,12 +91,14 @@ class fun(commands.Cog):
 
     @cat.command(name="gif")
     async def gif(self, ctx):
+        """yes a cat gif"""
         header = {"x-api-key": self.bot.config["keys"]["cat_api"]}
         r = requests.get(url="https://api.thecatapi.com/v1/images/search?mime_types=gif", headers=header)
         await self.get_cat(ctx, r)
 
     @cat.command(name="pic")
     async def pic(self, ctx):
+        """yes a cat pic"""
         header = {"x-api-key": self.bot.config["keys"]["cat_api"]}
         r = requests.get(url="https://api.thecatapi.com/v1/images/search?mime_types=jpg,png", headers=header)
         print(r)
@@ -100,6 +107,7 @@ class fun(commands.Cog):
     @commands.group(case_insensitive=True, invoke_without_command=True)
     @commands.cooldown(3, 10, commands.BucketType.user)
     async def dog(self, ctx):
+        """doggo doggo doggo"""
         await ctx.send_help(ctx.command)
 
     # IDEA: Allow people to list breeds and search by breeds
@@ -117,12 +125,14 @@ class fun(commands.Cog):
 
     @dog.command(name="gif")
     async def _gif(self, ctx):
+        """A dog gif"""
         header = {"x-api-key": self.bot.config["keys"]["dog_api"]}
         r = requests.get(url="https://api.thedogapi.com/v1/images/search?mime_types=gif", headers=header)
         await self.get_dog(ctx, r)
 
     @dog.command(name="pic")
     async def _pic(self, ctx):
+        """a dog pic"""
         header = {"x-api-key": self.bot.config["keys"]["dog_api"]}
         r = requests.get(url="https://api.thedogapi.com/v1/images/search?mime_types=jpg,png", headers=header)
         await self.get_dog(ctx, r)
@@ -132,6 +142,7 @@ class fun(commands.Cog):
     @commands.command(name="giphy", aliases=["giffy", "jiff"])
     @commands.cooldown(3, 10, commands.BucketType.user)
     async def giphy(self, ctx, *, search=None):
+        """gets a random gif from giphy"""
         head = {"api_key": self.bot.config["keys"]["giphy_api"]}
 
         if search is None:
@@ -165,6 +176,7 @@ class fun(commands.Cog):
     @commands.command(name="memes", aliases=["meme", "meem"])
     @commands.cooldown(3, 10, commands.BucketType.user)
     async def memes(self, ctx):
+        """get a meme from r/me_irl, r/dankmemes and r/memes"""
         r = requests.get(url="https://meme-api.herokuapp.com/gimme")
 
         if r.status_code == 200:

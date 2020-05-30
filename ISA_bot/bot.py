@@ -29,6 +29,7 @@ for filename in os.listdir("./cogs"):
         bot.load_extension(f"cogs.{filename[:-3]}")
 
 bot.color_list = [c for c in colors.values()]
+bot.version = __version__
 
 # TODO: make a separate file for isa related queries
 @bot.command(name="events")

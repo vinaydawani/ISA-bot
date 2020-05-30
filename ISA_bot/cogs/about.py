@@ -11,15 +11,21 @@ from utils import colors
 
 
 class about(commands.Cog):
+    """about the bot, beep boop!!"""
+
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
     async def ping(self, ctx):
+        """Pings the bot"""
         await send_embedded(ctx, f"Pong! {round(self.bot.latency * 1000)}ms")
 
     @commands.command()
     async def info(self, ctx, args: str = None):
+        """
+        Info about the bot.
+        """
         if str != "short":
             embed = discord.Embed(
                 title="ISA_bot",
@@ -31,11 +37,11 @@ class about(commands.Cog):
             embed.add_field(
                 name="\ud83c\udfa5Quick examples:", value="[Simple commands](https://i.imgur.com/BqgJZuQ.gif)"
             )
-            embed.set_image(url="https://i.imgur.com/rO9MzrP.jpg")
             embed.add_field(
                 name="\ud83d\udd17 Bot source code", value="[Github Link](https://github.com/vinaydawani/ISA-bot)"
             )
-            embed.set_footer(text="Made by @External72#5255")
+            embed.set_image(url="https://i.imgur.com/rO9MzrP.jpg")
+            embed.set_footer(text="Made by @External72#6969")
             await ctx.send(embed=embed)
         else:
             await send_embedded(ctx, "[Github Link](https://github.com/vinaydawani/ISA-bot)")
