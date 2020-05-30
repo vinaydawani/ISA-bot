@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# v1.1.0
+
+### Added
+
+- All new help function
+  - gives sorted pages of help instead of a big page
+  - more details on usage
+- Documentation for each function.
+
+### Fixed
+
+- Small error in coronavirus command because of change in Worldometer website
+
 # v1.0.0
 
 This is the first stable release of the general purpose bot developed for discord server of [Indian Students Association](https://www.isaosu.com) at The Ohio State University. This bot is complete with basic functionality required by any server including admin and mod functions as well as a few entertainment functions.
