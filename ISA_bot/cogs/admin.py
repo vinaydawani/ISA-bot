@@ -32,6 +32,8 @@ class GlobalChannel(commands.Converter):
 
 
 class admin(commands.Cog):
+    """admin commands on which mortals will **never** lay an eye upon"""
+
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
@@ -39,6 +41,7 @@ class admin(commands.Cog):
     @commands.command(name="load", hidden=True)
     @commands.is_owner()
     async def loadcog(self, ctx, cog: str = None):
+        """ loads the cog to the bot"""
         if cog is None:
             await ctx.send("Please enter a cog to load it")
         else:
@@ -52,6 +55,7 @@ class admin(commands.Cog):
     @commands.command(name="unload", hidden=True)
     @commands.is_owner()
     async def unloadcog(self, ctx, cog: str = None):
+        """unloads the cog from the bot"""
         if cog is None:
             await ctx.send("Please enter a cog to unload it")
         else:
@@ -65,6 +69,7 @@ class admin(commands.Cog):
     @commands.command(name="reload", hidden=True)
     @commands.is_owner()
     async def reloadcog(self, ctx, cog: str = None):
+        """reloads a cog"""
         if cog is None:
             await ctx.send("Please enter a cog to reload it")
         else:
@@ -134,6 +139,7 @@ class admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def spam(self, ctx, amount, *, content: str):
+        """spams a message to the channel"""
         await ctx.message.delete()
         for spam in range(int(amount)):
             await ctx.send(content)
@@ -141,6 +147,7 @@ class admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def botsay(self, ctx, channel: Optional[GlobalChannel], embed: bool = False, *, stuff: str):
+        """bot says whatever you type wit ability to embed and select a channel"""
         msg = copy.copy(ctx.message)
         channel = channel or ctx.channel
         msg.channel = channel
@@ -154,6 +161,7 @@ class admin(commands.Cog):
     @commands.command(hidden=True)
     @commands.is_owner()
     async def sudo(self, ctx, channel: Optional[GlobalChannel], who: discord.User, *, command: str):
+        """run a command as someone else"""
         msg = copy.copy(ctx.message)
         channel = channel or ctx.channel
         msg.channel = channel

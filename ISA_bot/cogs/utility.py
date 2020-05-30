@@ -14,12 +14,15 @@ from utils.paginator import Pages
 
 
 class utility(commands.Cog):
+    """things that you might need to use someday on a whim"""
+
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
 
     @commands.command()
     async def feedback(self, ctx, *, content: str = None):
+        """give a feedback on how to improve this bot. All feedback welcome from changes in messages to new features"""
         if content == None:
             return await send_embedded(ctx, "**ERROR :x:**: Please enter a feedback like !!feedback [content]")
         else:
@@ -36,6 +39,7 @@ class utility(commands.Cog):
 
     @commands.command(name="urban", aliases=["ud"])
     async def _urban_dictionary(self, ctx, *, word=None):
+        """searches for a word in urban dictionary"""
         if word is None:
             return await send_embedded(
                 ctx, "**ERROR :x:**: You are missing the word! Please enter a command like !!urban [word]",
@@ -53,6 +57,7 @@ class utility(commands.Cog):
 
     @commands.command()
     async def timer(self, ctx, secs: int = None):
+        """sets a timer in seconds. WIP"""
         if secs is None:
             return await send_embedded(
                 ctx, "**ERROR :x:**: You are missing the time! Please enter a command like !!timer [seconds]",

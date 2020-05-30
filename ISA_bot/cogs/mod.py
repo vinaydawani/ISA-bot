@@ -13,6 +13,8 @@ from utils.global_utils import confirm_prompt, send_embedded
 
 
 class mod(commands.Cog):
+    """ commands for the mods 👀"""
+
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
@@ -51,6 +53,7 @@ class mod(commands.Cog):
     @commands.command()
     @checks.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member = None, *, reason=None):
+        """kicks a user"""
         if member is None:
             await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
@@ -64,6 +67,7 @@ class mod(commands.Cog):
     async def ban(
         self, ctx, member: discord.Member = None, deleted: Optional[int] = 0, *, reason=None,
     ):
+        """bans an user"""
         if member is None:
             await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
@@ -77,6 +81,7 @@ class mod(commands.Cog):
     @commands.command()
     @checks.has_permissions(ban_members=True)
     async def unban(self, ctx, member: converters.BannedMember, *, reason=None):
+        """unban an user"""
         if member is None:
             await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
@@ -89,6 +94,7 @@ class mod(commands.Cog):
     @checks.has_permissions(ban_members=True)
     @checks.has_permissions(kick_members=True)
     async def softban(self, ctx, member: converters.MemberID, *, reason=None):
+        """softbans an user"""
         if member is None:
             await ctx.send("You probably haven't entered something correctly\n```!!kick <member> <reason>```")
         try:
@@ -112,6 +118,7 @@ class mod(commands.Cog):
     @commands.guild_only()
     @checks.has_permissions(ban_members=True)
     async def lockdown(self, ctx, action):
+        """LOCKDOWN"""
         if action.lower() == "on":
             msg = await ctx.send("Locking down the channel...")
             await ctx.channel.set_permissions(discord.utils.get(ctx.guild.roles, id=ctx.guild.id), send_messages=False)
@@ -159,6 +166,7 @@ class mod(commands.Cog):
     @checks.is_admin()
     @checks.has_permissions(manage_messages=True)
     async def purge(self, ctx):
+        """purges messages on the basis of subcommands"""
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
@@ -171,11 +179,13 @@ class mod(commands.Cog):
 
     @purge.command(name="user")
     async def _user(self, ctx, member: discord.Member, search: int = 10):
+        """purge message by certain user"""
         await self.to_purge(ctx, search, lambda m: m.author == member)
         await ctx.message.add_reaction("\U00002705")
 
     @purge.command(name="all")
     async def _all(self, ctx, search: int = 20):
+        """deletes given ammount of messages"""
         if not await confirm_prompt(ctx, f"Delete {search} messages?"):
             return
         await self.to_purge(ctx, search, lambda m: True)
@@ -184,6 +194,7 @@ class mod(commands.Cog):
     @purge.command(name="clean")
     @commands.is_owner()
     async def _clean(self, ctx, search: int = 149):
+        """deletes last 150 messages"""
         if not await confirm_prompt(ctx, f"Delete **all** messages?"):
             return
         await self.to_purge(ctx, search, lambda m: True)
@@ -191,11 +202,13 @@ class mod(commands.Cog):
 
     @purge.command(name="content")
     async def _equals(self, ctx, *, substr):
+        """deletes messages equal to a given string"""
         await self.to_purge(ctx, 50, lambda m: m.content == substr)
         await ctx.message.add_reaction("\U00002705")
 
     @purge.command(name="contains")
     async def _contains(self, ctx, *, substr):
+        """deletes message with a specific string in it"""
         await self.to_purge(ctx, 50, lambda m: substr in m.content)
         await ctx.message.add_reaction("\U00002705")
 
@@ -216,6 +229,7 @@ class mod(commands.Cog):
     @commands.group(name="presence", invoke_without_command=True, case_insensitive=True)
     @checks.is_admin()
     async def change_presence(self, ctx):
+        """change rich presence of the bot"""
         await ctx.send_help(ctx.command)
 
     @change_presence.command(aliases=["l"])
@@ -273,6 +287,7 @@ class mod(commands.Cog):
 
     @change_presence.command()
     async def status(self, ctx, status):
+        """change status of the bot"""
         stata = {
             "online": discord.Status.online,
             "offline": discord.Status.invisible,
@@ -295,12 +310,14 @@ class mod(commands.Cog):
 
     @change_presence.command()
     async def clear(self, ctx):
+        """clears rich presence"""
         await self.bot.change_presence()
         await ctx.message.add_reaction("\u2705")
         await ctx.message.delete(delay=15.0)
 
     @change_presence.command()
     async def reset(self, ctx):
+        """sets a generic rich presence"""
         await self.bot.change_presence(
             activity=discord.Activity(type=discord.ActivityType.listening, name="you for feedback :)")
         )
