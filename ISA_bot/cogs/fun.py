@@ -173,7 +173,7 @@ class fun(commands.Cog):
 
     # NOTE: othher gif APIs include gfycat and tenor
 
-    @commands.command(name="memes", aliases=["meme", "meem"])
+    @commands.command(name="memes", aliases=["meme", "meem"], help="get a meme from r/me_irl, r/dankmemes and r/memes")
     @commands.cooldown(3, 10, commands.BucketType.user)
     async def memes(self, ctx):
         """get a meme from r/me_irl, r/dankmemes and r/memes"""

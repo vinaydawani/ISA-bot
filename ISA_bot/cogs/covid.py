@@ -48,7 +48,9 @@ class covid(commands.Cog):
         all_df = self.df[self.df["Country,Other"].str.match("Total:", na=False)][val].values[0]
         return all_df
 
-    @commands.command(name="covid", aliases=["coronavirus"])
+    @commands.command(
+        name="covid19", aliases=["coronavirus"], help="retuns the stats of novel coronavirus cases given the country"
+    )
     @commands.cooldown(2, 15, commands.BucketType.user)
     async def covid(self, ctx, location="ALL"):
         """retuns the stats of novel coronavirus cases given the country"""
