@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "ISA_bot",
-      "script": "bot.py",
+      "script": "./ISA_bot/bot.py",
       "interpreter": "python3.8",
       "interpreter_args": "-u"
     }

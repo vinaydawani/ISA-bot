@@ -9,6 +9,10 @@
 
 <br>
 
+<a href="https://heroku.com/deploy?template=https://github.com/kyb3r/modmail">
+    <img src="https://img.shields.io/badge/deploy_to-vultr-2f498a.svg?style=for-the-badge&logo=vultr">
+</a>
+
 <a href="https://discord.gg/4Smh6RZ">
     <img src="https://img.shields.io/discord/699183601387831307.svg?label=Discord&logo=Discord&colorB=7289da&style=for-the-badge" alt="Support">
 </a>
@@ -45,4 +49,12 @@
     <img alt="GitHub tag (latest SemVer)" src="https://img.shields.io/badge/Pooja-what%20Is%20this%20behavior%20-yellowgreen?style=for-the-badge">
 </a>
 
+
+<!-- <br>
+
+<img alt="Requires.io" src="https://img.shields.io/requires/github/vinaydawani/ISA-bot?style=for-the-badge">
+
+<img alt="Libraries.io dependency status for GitHub repo" src="https://img.shields.io/librariesio/github/vinaydawani/ISA-bot?style=for-the-badge">
+
+<br> -->
 </div>
