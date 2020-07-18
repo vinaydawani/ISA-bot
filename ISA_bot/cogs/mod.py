@@ -110,7 +110,7 @@ class mod(commands.Cog):
     @softban.error
     async def _error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
+            return await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
         elif isinstance(error, commands.MissingPermissions):
             return await send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 
@@ -119,6 +119,12 @@ class mod(commands.Cog):
     async def react(self, ctx, emoji, messageID: int):
         msg = await ctx.fetch_message(messageID)
         await msg.add_reaction(emoji)
+        await ctx.message.delete(delay=5)
+
+    @react.error
+    async def react_error(self, ctx, error):
+        if isinstance(error, commands.CheckFailure):
+            return await send_embedded(ctx, "Can't do that!")
 
     @commands.command()
     @commands.guild_only()
@@ -139,7 +145,7 @@ class mod(commands.Cog):
     @lockdown.error
     async def lockdown_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
+            return await send_embedded(ctx, "Please check the arguments as one of it might be wrong.")
         elif isinstance(error, commands.MissingPermissions):
             return await send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 

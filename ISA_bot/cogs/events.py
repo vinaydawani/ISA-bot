@@ -52,14 +52,14 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         message_id = payload.message_id
-        if message_id == 733615890293194752:  # ID of the role message
+        if message_id == 734044027858452502:  # ID of the role message
             guild_id = payload.guild_id
             guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
 
             roles = {
                 "🙋‍♂️": "He/Him",
                 "🙋‍♀️": "She/Her",
-                "🙋": "Them/They",
+                "🙋": "They/Them",
             }
 
             if payload.emoji.name == "🙋‍♂️":
@@ -67,7 +67,7 @@ class events(commands.Cog):
             if payload.emoji.name == "🙋‍♀️":
                 role = discord.utils.get(guild.roles, name="She/Her")
             if payload.emoji.name == "🙋":
-                role = discord.utils.get(guild.roles, name="Them/They")
+                role = discord.utils.get(guild.roles, name="They/Them")
 
             if role is not None:
                 member = discord.utils.find(lambda m: m.id == payload.user_id, guild.members)
@@ -76,8 +76,8 @@ class events(commands.Cog):
                     current_role = list(current_role)
                     await member.remove_roles(*current_role)
                     await member.add_roles(role)
-                    pronoun_message = await self.bot.get_channel(733614727544045638).fetch_message(
-                        733615890293194752
+                    pronoun_message = await self.bot.get_channel(699675695231533126).fetch_message(
+                        734044027858452502
                     )  # ID of role message or channel
                     await pronoun_message.remove_reaction(payload.emoji, payload.member)
                 else:
