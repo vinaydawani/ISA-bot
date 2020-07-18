@@ -115,6 +115,12 @@ class mod(commands.Cog):
             return await send_embedded(ctx, "You don't have the permission to pull this one off broh!!")
 
     @commands.command()
+    @checks.has_permissions(manage_emojis=True)
+    async def react(self, ctx, emoji, messageID: int):
+        msg = await ctx.fetch_message(messageID)
+        await msg.add_reaction(emoji)
+
+    @commands.command()
     @commands.guild_only()
     @checks.has_permissions(ban_members=True)
     async def lockdown(self, ctx, action):
