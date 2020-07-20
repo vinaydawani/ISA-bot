@@ -83,13 +83,19 @@ class events(commands.Cog):
                 else:
                     print("member not found")
 
-        if message_id == 734048899324575784:
+        if message_id == 734610164899905569:
             guild_id = payload.guild_id
             guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
 
             roles = {
                 "👶": "👶 Freshman",
-                "✌️": "Sophomore",
+                "✌️": "✌️ Sophomore",
+                "🍻": "🍻 Junior",
+                "👑": "👑 Senior",
+                "💀": "💀 SuperSenior",
+                "👨‍🎓": "👨‍🎓 Alumna",
+                "📜": "📜 Graduate School",
+                "🍾": "🍾 PhD",
             }
 
             role = None
@@ -103,7 +109,7 @@ class events(commands.Cog):
                 current_role = list(current_role)
                 await payload.member.remove_roles(*current_role)
                 await payload.member.add_roles(role)
-                class_message = await self.bot.get_channel(733614727544045638).fetch_message(734048899324575784)
+                class_message = await self.bot.get_channel(699675695231533126).fetch_message(734610164899905569)
                 if current_role:
                     for emoji, pre_role in roles.items():
                         if pre_role == str(current_role[0]):
@@ -114,13 +120,19 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
         message_id = payload.message_id
-        if message_id == 734048899324575784:
+        if message_id == 734610164899905569:
             guild_id = payload.guild_id
             guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
 
             roles = {
                 "👶": "👶 Freshman",
-                "✌️": "Sophomore",
+                "✌️": "✌️ Sophomore",
+                "🍻": "🍻 Junior",
+                "👑": "👑 Senior",
+                "💀": "💀 SuperSenior",
+                "👨‍🎓": "👨‍🎓 Alumna",
+                "📜": "📜 Graduate School",
+                "🍾": "🍾 PhD",
             }
 
             role = None
