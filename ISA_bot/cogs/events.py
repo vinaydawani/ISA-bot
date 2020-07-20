@@ -102,10 +102,10 @@ class events(commands.Cog):
             for x in list(roles.keys()):
                 if payload.emoji.name == x:
                     role = discord.utils.get(guild.roles, name=roles[x])
+                    break
 
             if role is not None:
-                current_role = filter(lambda r: str(r) in list(roles.values()), payload.member.roles)
-                current_role = list(current_role)
+                current_role = list(filter(lambda r: str(r) in list(roles.values()), payload.member.roles))
                 await payload.member.remove_roles(*current_role)
                 await payload.member.add_roles(role)
                 class_message = await self.bot.get_channel(699675695231533126).fetch_message(734610164899905569)
@@ -113,6 +113,7 @@ class events(commands.Cog):
                     for emoji, pre_role in roles.items():
                         if pre_role == str(current_role[0]):
                             await class_message.remove_reaction(emoji, payload.member)
+                            break
             else:
                 print("role not found")
 
@@ -139,18 +140,12 @@ class events(commands.Cog):
             for x in list(roles.keys()):
                 if payload.emoji.name == x:
                     role = discord.utils.get(guild.roles, name=roles[x])
+                    break
 
             if role is not None:
                 member = discord.utils.find(lambda m: m.id == payload.user_id, guild.members)
                 if member is not None:
-                    # current_role = filter(lambda r: str(r) in list(roles.values()), payload.member.roles)
-                    # current_role = list(current_role)
-                    # await payload.member.remove_roles(*current_role)
                     await member.remove_roles(role)
-                # class_message = await self.bot.get_channel(733614727544045638).fetch_message(734048899324575784)
-                # for emoji, pre_role in roles.items():
-                #     if pre_role == str(current_role[0]):
-                #         await class_message.remove_reaction(emoji, payload.member)
             else:
                 print("role not found")
 
