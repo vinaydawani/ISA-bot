@@ -83,9 +83,65 @@ class events(commands.Cog):
                 else:
                     print("member not found")
 
+        if message_id == 734048899324575784:
+            guild_id = payload.guild_id
+            guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
+
+            roles = {
+                "👶": "👶 Freshman",
+                "✌️": "Sophomore",
+            }
+
+            role = None
+
+            for x in list(roles.keys()):
+                if payload.emoji.name == x:
+                    role = discord.utils.get(guild.roles, name=roles[x])
+
+            if role is not None:
+                current_role = filter(lambda r: str(r) in list(roles.values()), payload.member.roles)
+                current_role = list(current_role)
+                await payload.member.remove_roles(*current_role)
+                await payload.member.add_roles(role)
+                class_message = await self.bot.get_channel(733614727544045638).fetch_message(734048899324575784)
+                if current_role:
+                    for emoji, pre_role in roles.items():
+                        if pre_role == str(current_role[0]):
+                            await class_message.remove_reaction(emoji, payload.member)
+            else:
+                print("role not found")
+
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
-        pass
+        message_id = payload.message_id
+        if message_id == 734048899324575784:
+            guild_id = payload.guild_id
+            guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
+
+            roles = {
+                "👶": "👶 Freshman",
+                "✌️": "Sophomore",
+            }
+
+            role = None
+
+            for x in list(roles.keys()):
+                if payload.emoji.name == x:
+                    role = discord.utils.get(guild.roles, name=roles[x])
+
+            if role is not None:
+                member = discord.utils.find(lambda m: m.id == payload.user_id, guild.members)
+                if member is not None:
+                    # current_role = filter(lambda r: str(r) in list(roles.values()), payload.member.roles)
+                    # current_role = list(current_role)
+                    # await payload.member.remove_roles(*current_role)
+                    await member.remove_roles(role)
+                # class_message = await self.bot.get_channel(733614727544045638).fetch_message(734048899324575784)
+                # for emoji, pre_role in roles.items():
+                #     if pre_role == str(current_role[0]):
+                #         await class_message.remove_reaction(emoji, payload.member)
+            else:
+                print("role not found")
 
     # @commands.Cog.listener()
     # async def on_member_join(self, member):
