@@ -72,8 +72,7 @@ class events(commands.Cog):
             if role is not None:
                 member = discord.utils.find(lambda m: m.id == payload.user_id, guild.members)
                 if member is not None:
-                    current_role = filter(lambda r: str(r) in list(roles.values()), payload.member.roles)
-                    current_role = list(current_role)
+                    current_role = list(filter(lambda r: str(r) in list(roles.values()), payload.member.roles))
                     await member.remove_roles(*current_role)
                     await member.add_roles(role)
                     pronoun_message = await self.bot.get_channel(699675695231533126).fetch_message(
