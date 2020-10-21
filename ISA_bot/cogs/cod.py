@@ -15,24 +15,32 @@ class COD(commands.Cog):
     async def warzone(self, ctx):
         await ctx.send_help(ctx.command)
 
-    async def get_stats(self, ctx):
-        pass
+    async def get_stats(self, ctx, URL):
+        page = requests.get(URL)
+        soup = BeautifulSoup(page.content, "html.parser")
 
     @warzone.command(name="battle")
     async def _battle(self, ctx, game_tag: str):
-        await ctx.send(game_tag)
+        tag, identifier = game_tag.split("#")
+        URL = f"https://cod.tracker.gg/warzone/profile/battlenet/{tag}%23{identifier}/overview"
+        await self.get_stats(ctx, URL)
 
     @warzone.command(name="psn")
     async def _psn(self, ctx, game_tag: str):
-        pass
+        URL = f"https://cod.tracker.gg/warzone/profile/psn/{game_tag}/overview"
+        await self.get_stats(ctx, URL)
 
     @warzone.command(name="activision")
-    async def _activision(self, ctx, game_tag: str):
-        pass
+    async def _activision(self, ctx, *, game_tag: str):
+        game_tag = game_tag.translate(str.maketrans({" ": "%20", "#": "%23"}))
+        URL = f"https://cod.tracker.gg/warzone/profile/atvi/{game_tag}/overview"
+        await self.get_stats(ctx, URL)
 
     @warzone.command(name="xbox")
-    async def _xbox(self, ctx, game_tag: str):
-        pass
+    async def _xbox(self, ctx, *, game_tag: str):
+        game_tag = game_tag.translate(str.maketrans({" ": "%20"}))
+        URL = f"https://cod.tracker.gg/warzone/profile/xbl/{game_tag}/overview"
+        await self.get_stats(ctx, URL)
 
 
 def setup(bot):
