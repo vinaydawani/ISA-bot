@@ -19,6 +19,21 @@ class COD(commands.Cog):
         page = requests.get(URL)
         soup = BeautifulSoup(page.content, "html.parser")
 
+        warzone_stats = soup.find("div", class_="segment-stats")
+
+        titles = warzone_stats.find_all("span", class_="name")
+        values = warzone_stats.find_all("span", class_="value")
+
+        title_list = [_.text for _ in titles]
+        value_list = [_.text for _ in values]
+
+        stats = {k: v for (k, v) in zip(title_list, value_list)}
+
+        await ctx.send(stats)
+
+    async def make_embed(self, ctx, stats):
+        pass
+
     @warzone.command(name="battle")
     async def _battle(self, ctx, game_tag: str):
         tag, identifier = game_tag.split("#")
