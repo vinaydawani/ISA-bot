@@ -6,6 +6,7 @@ import random
 from discord.ext import commands
 from bs4 import BeautifulSoup
 from utils import colors
+from utils.global_utils import send_embedded
 
 
 class COD(commands.Cog):
@@ -23,6 +24,10 @@ class COD(commands.Cog):
         soup = BeautifulSoup(page.content, "html.parser")
 
         warzone_stats = soup.find("div", class_="segment-stats")
+
+        if warzone_stats is None:
+            await send_embedded(ctx, "No data available for this username.\nPlease enter a valid username!")
+            return
 
         titles = warzone_stats.find_all("span", class_="name")
         values = warzone_stats.find_all("span", class_="value")
@@ -75,6 +80,16 @@ class COD(commands.Cog):
         game_tag = game_tag.translate(str.maketrans({" ": "%20"}))
         URL = f"https://cod.tracker.gg/warzone/profile/xbl/{game_tag}/overview"
         await self.get_stats(ctx, URL, game_tag)
+
+    @_battle.error
+    @_psn.error
+    @_activision.error
+    @_xbox.error
+    async def _error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await send_embedded(ctx, "The game tag is missing!")
+        elif isinstance(error, commands.BadArgument):
+            await send_embedded(ctx, "The game tag is missing!")
 
 
 def setup(bot):
