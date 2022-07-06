@@ -33,7 +33,7 @@ jupyter-client==6.1.6
 jupyter-core==4.6.3
 kiwisolver==1.2.0
 lazy-object-proxy==1.4.3
-lxml==4.6.2
+lxml==4.9.1
 matplotlib==3.2.1
 mccabe==0.6.1
 multidict==4.7.5
